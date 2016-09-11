@@ -2,11 +2,10 @@ from __future__ import print_function
 
 import sys
 
+from string import ascii_uppercase
+
 import urllib2
 import bs4
-
-def get_opened_url(url_str):
-    return urllib2.urlopen(url_str)
 
 def get_url_params_kv(url_str):
     """
@@ -26,6 +25,15 @@ def get_url_params_kv(url_str):
     }
 
     return params_kv
+
+def construct_url_with_params(url_str, params_kv):
+    # Get the list of params in the format ["a=1", "b=2"...].
+    params_list = [k+"="+v for k, v in params_kv.items()]
+
+    # Get the parameters string in the format a=1&b=2...
+    params_str = "&".join(params_list)
+
+    return url_str + "?" + params_str
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
