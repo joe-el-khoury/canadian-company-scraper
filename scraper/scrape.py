@@ -72,6 +72,33 @@ def get_next_page(url_str):
     url_params["letter"] = next_page_char
     return construct_url_with_params(url_str, url_params)
 
+def get_open_url(url_str):
+    """
+    Opens the url specified, but does not interact with it in any way.
+    """
+    return urllib2.urlopen(url_str)
+
+def get_company_links(url_str):
+    """
+    Gets all the links on the page that contain information about the companies.
+    """
+    # Open the page and initialize the scraper.
+    page = get_open_url(url_str)
+    scraper = bs4.BeautifulSoup(page.read())
+
+    companies = []
+    # Get a list containing html describing the companies.
+    company_html_list = scraper.find_all("li", class_="mrgn-bttm-sm")
+    for company_html in company_html_list:
+        url = company_html.a["href"]
+        # The url from the page is relative, so make it absolute.
+        url = "http://www.ic.gc.ca" + url
+
+        companies.append(url)
+
+    return companies
+
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         out_file = "../data/company_data.csv"
