@@ -103,6 +103,15 @@ def get_company_links(url_str):
 
     return companies
 
+def get_company_name(url_str):
+    """
+    Gets the name of the company from the url containing information about it.
+    """
+    scraper = get_scraper(url_str)
+    
+    h1 = scraper.find_all("h1", {"id": "cn-cont"})[0]
+    return h1.contents[0].strip()
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         out_file = "../data/company_data.csv"
