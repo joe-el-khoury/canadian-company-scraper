@@ -129,6 +129,15 @@ def get_company_description(url_str):
     company_description = scraper.find_all("p", class_="comment more")[0].contents[0].strip()
     return get_clean_description(company_description)
 
+def get_company_website(url_str):
+    scraper = get_scraper(url_str)
+    
+    html = scraper.find_all("a", {"title": "Website URL"})
+    if len(html) == 0:
+        return ""
+
+    return html[0]["href"]
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         out_file = "../data/company_data.csv"
