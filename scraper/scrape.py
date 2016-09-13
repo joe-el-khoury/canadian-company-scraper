@@ -3,6 +3,9 @@ from __future__ import print_function
 import sys
 
 from string import ascii_uppercase
+from string import ascii_lowercase
+
+import unicodedata
 
 import urllib2
 import bs4
@@ -78,12 +81,18 @@ def get_open_url(url_str):
     """
     return urllib2.urlopen(url_str)
 
+scraper_cache = {}
 def get_scraper(url_str):
     """
     Returns a beautiful soup object.
     """
+    if scraper_cache.get(url_str) is not None:
+        return scraper_cache[url_str]
+    
     page = get_open_url(url_str)
-    return bs4.BeautifulSoup(page.read())
+    ret = bs4.BeautifulSoup(page.read())
+    scraper_cache[url_str] = ret
+    return ret
 
 def get_company_links(url_str):
     """
@@ -108,7 +117,7 @@ def get_company_name(url_str):
     Gets the name of the company from the url containing information about it.
     """
     scraper = get_scraper(url_str)
-    
+
     h1 = scraper.find_all("h1", {"id": "cn-cont"})[0]
     return h1.contents[0].strip()
 
