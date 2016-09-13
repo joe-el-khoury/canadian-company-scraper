@@ -121,6 +121,14 @@ def get_company_name(url_str):
     h1 = scraper.find_all("h1", {"id": "cn-cont"})[0]
     return h1.contents[0].strip()
 
+def get_company_description(url_str):
+    def get_clean_description(description):
+        return unicodedata.normalize('NFKD', description).encode('ascii', 'ignore').strip()
+    
+    scraper = get_scraper(url_str)
+    company_description = scraper.find_all("p", class_="comment more")[0].contents[0].strip()
+    return get_clean_description(company_description)
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         out_file = "../data/company_data.csv"
