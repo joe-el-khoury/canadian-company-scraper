@@ -78,13 +78,18 @@ def get_open_url(url_str):
     """
     return urllib2.urlopen(url_str)
 
+def get_scraper(url_str):
+    """
+    Returns a beautiful soup object.
+    """
+    page = get_open_url(url_str)
+    return bs4.BeautifulSoup(page.read())
+
 def get_company_links(url_str):
     """
     Gets all the links on the page that contain information about the companies.
     """
-    # Open the page and initialize the scraper.
-    page = get_open_url(url_str)
-    scraper = bs4.BeautifulSoup(page.read())
+    scraper = get_scraper(url_str)
 
     companies = []
     # Get a list containing html describing the companies.
@@ -97,7 +102,6 @@ def get_company_links(url_str):
         companies.append(url)
 
     return companies
-
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
